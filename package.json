@@ -1,0 +1,16 @@
+{
+  "name": "custom-proxy",
+  "version": "1.0.0",
+  "description": "Subscription proxy backend (Marzban / Let's Encrypt / Nginx)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "port": 8080,
+  "provider_id": "HnBuVTvc",
+  "backup_domain": "https://www.cyber-x.fun/sub/",
+  "upstream_url": "https://ze.cyber-x.online:10086/sub/",
+  "email": "ze.ares77@gmail.com",
+  "domains": [
+    "www.cyber-x.fun",
+    "www.xonefun.store",
+    "www.happstore.shop",
+    "script.creedxt.store",
+    "www.4121-cfd.online",
+    "run.ovhteam.ru",
+    "create.appleacdn.ru",
+    "www.applecdn.info",
+    "store.cyber-x.press",
+    "www.cyber-x.press"
+  ]
+}
