@@ -26,30 +26,18 @@ if ! command -v node >/dev/null 2>&1; then
 fi
 echo "==> Node: $(node -v)"
 
-# 2) domains.json oku (node ile — jq gerekmez)
+# 2) domains.json oku (node ile — jq gerekmez). Config'i index.js dogrudan okur.
 jsget() { node -e "const c=require(process.argv[1]); const v=c[process.argv[2]]; process.stdout.write(v==null?'':String(v))" "$CFG" "$1"; }
 PORT="$(jsget port)";          PORT="${PORT:-8080}"
-PROVIDER_ID="$(jsget provider_id)"
-BACKUP_DOMAIN="$(jsget backup_domain)"
-UPSTREAM_URL="$(jsget upstream_url)"
 EMAIL="$(jsget email)"
-DOMAINS="$(node -e "const c=require(process.argv[1]); process.stdout.write((c.domains||[]).join(' '))" "$CFG")"
-echo "==> Config: port=$PORT provider=$PROVIDER_ID domains=[$DOMAINS]"
+DOMAINS="$(node -e "const c=require(process.argv[1]); process.stdout.write(Object.keys(c.domains||{}).join(' '))" "$CFG")"
+echo "==> Config: port=$PORT domains=[$DOMAINS]"
 
-# 3) .env yaz (index.js bunu okur; git'e gönderilmez)
-cat > "$APP_DIR/.env" <<EOF
-PORT=$PORT
-PROVIDER_ID=$PROVIDER_ID
-BACKUP_DOMAIN=$BACKUP_DOMAIN
-UPSTREAM_URL=$UPSTREAM_URL
-EOF
-echo "==> .env yazıldı"
-
-# 4) Paketler
+# 3) Paketler
 echo "==> npm install..."
 ( cd "$APP_DIR" && npm install --omit=dev )
 
-# 5) systemd servisi
+# 4) systemd servisi
 cat > "/etc/systemd/system/$SERVICE.service" <<EOF
 [Unit]
 Description=Subscription Proxy
@@ -69,7 +57,7 @@ systemctl enable "$SERVICE"
 systemctl restart "$SERVICE"
 echo "==> Servis çalışıyor (port $PORT)"
 
-# 6) fail2ban — SSH brute-force (5 deneme -> 5 saat ban)
+# 5) fail2ban — SSH brute-force (5 deneme -> 5 saat ban)
 echo "==> fail2ban kuruluyor..."
 apt install -y fail2ban
 cat > /etc/fail2ban/jail.local <<'EOF'
@@ -87,7 +75,7 @@ systemctl enable fail2ban
 systemctl restart fail2ban
 echo "==> fail2ban aktif (maxretry=5, bantime=5h)"
 
-# 7) Firewall (ufw) — SSH/HTTP/HTTPS açık; 8080 dışarıya KAPALI (yalnızca nginx erişir)
+# 6) Firewall (ufw) — SSH/HTTP/HTTPS açık; 8080 dışarıya KAPALI (yalnızca nginx erişir)
 echo "==> ufw yapılandırılıyor..."
 apt install -y ufw
 ufw allow 22/tcp
@@ -96,7 +84,7 @@ ufw allow 443/tcp
 ufw --force enable
 echo "==> ufw aktif (22/80/443 açık, 8080 kapalı)"
 
-# 8) Nginx + SSL (opsiyonel — domainler bu VPS IP'sine yönlenmiş olmalı)
+# 7) Nginx + SSL (opsiyonel — domainler bu VPS IP'sine yönlenmiş olmalı)
 read -rp "Nginx + SSL (Let's Encrypt) kurulsun mu? [y/N]: " DOSSL || DOSSL="n"
 if [ "$(printf '%s' "${DOSSL:-}" | tr '[:upper:]' '[:lower:]')" = "y" ]; then
     [ -n "$DOMAINS" ] || { echo "HATA: domains.json içinde domain yok"; exit 1; }
@@ -104,7 +92,7 @@ if [ "$(printf '%s' "${DOSSL:-}" | tr '[:upper:]' '[:lower:]')" = "y" ]; then
     PRIMARY="$(printf '%s' "$DOMAINS" | awk '{print $1}')"
     apt install -y nginx certbot
 
-    # 8a) HTTP nginx (acme-challenge + /sub proxy)
+    # 7a) HTTP nginx (acme-challenge + /sub proxy)
     mkdir -p /var/www/html/.well-known/acme-challenge
     cat > /etc/nginx/sites-available/subscription <<EOF
 server {
@@ -131,14 +119,17 @@ EOF
     ln -sf /etc/nginx/sites-available/subscription /etc/nginx/sites-enabled/subscription
     nginx -t && systemctl reload nginx
 
-    # 8b) certbot — tüm domainler tek sertifika
+    # 7b) certbot — tüm domainler tek sertifika
     CB_ARGS=""
     for d in $DOMAINS; do CB_ARGS="$CB_ARGS -d $d"; done
+    # --keep-until-expiring: gecerli sertifika varsa yeniden ALMAZ (rate-limit korumasi).
+    # --expand: domain listesi degistiyse (yeni domain) sertifikayi genisletir.
     certbot certonly --webroot -w /var/www/html \
         --deploy-hook "systemctl reload nginx" \
-        --non-interactive --agree-tos --expand -m "$EMAIL" $CB_ARGS
+        --keep-until-expiring --expand \
+        --non-interactive --agree-tos -m "$EMAIL" $CB_ARGS
 
-    # 8c) HTTPS nginx (sertifika alındıktan sonra)
+    # 7c) HTTPS nginx (sertifika alındıktan sonra)
     [ -f /etc/letsencrypt/options-ssl-nginx.conf ] || \
         curl -fsSL https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf \
         -o /etc/letsencrypt/options-ssl-nginx.conf
