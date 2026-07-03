@@ -2,7 +2,15 @@
 
 Marzban subscription proxy backend. Hafif Node.js + Express, sıfır ekstra bağımlılık (sadece `express` + `axios`). Tüm ayarlar `domains.json` içinde.
 
-## Kurulum (VPS'te tek seferde kopyala-yapıştır)
+## Kurulum (VPS'te tek satır)
+
+git kurulu olmasa bile çalışır — git+curl'u kurar, repoyu indirir, `setup.sh`'i başlatır:
+
+```bash
+sudo bash -c "$(curl -sL https://github.com/kervenov/custom-proxy/raw/main/install.sh)"
+```
+
+Alternatif (git zaten kuruluysa):
 
 ```bash
 git clone https://github.com/kervenov/custom-proxy.git
@@ -10,7 +18,7 @@ cd custom-proxy
 bash setup.sh
 ```
 
-> `domains.json` gerçek değerlerle dolu gelir; farklı ayar istersen `bash setup.sh` öncesi düzenle.
+> `domains.json` gerçek değerlerle dolu gelir; farklı ayar istersen `/root/custom-proxy/domains.json`'u düzenleyip `bash setup.sh` çalıştır.
 
 `setup.sh` sırayla: Node.js kurar (yoksa) → `domains.json`'u okur → `.env` yazar → paketleri kurar → systemd servisini başlatır → **fail2ban** kurar (SSH: 5 başarısız deneme → 5 saat ban) → **ufw** firewall açar (22/80/443 açık, 8080 dışarıya kapalı) → sorarsa **Nginx + Let's Encrypt SSL** kurar (otomatik yenileme + nginx reload dahil).
 
