@@ -71,13 +71,6 @@ const APP_SETTINGS = {
     "tun-type":                       "singbox",   // TUN provider: sing-box (singbox/tun2proxy/default)
     "tun-mode":                        "gvisor",   // TUN mode: gVisor (system/gvisor)
 
-    /* --- Yerel proxy auth (Standard param — ProviderID gerekmez) ---
-       Happ'in cihazda actigi yerel SOCKS/HTTP proxy'lerin kimlik dogrulamasi.
-       from-json: bilgileri JSON config'ten alir; URL config'lerinde (bizim
-       durumumuz: vless:// vb.) auto gibi davranir -> Happ kendi uretir. */
-    "socks-auth-mode":              "from-json",   // SOCKS Inbound authentication
-    "http-auth-mode":               "from-json",   // HTTP Inbound authentication
-
     /* --- Excluded routes ---
        -set varyanti mevcut listeyi ONCE TEMIZLER, sonra yazar. Her abonelik
        guncellemesinde gonderildigi icin additive "exclude-routes" kullanilsa
