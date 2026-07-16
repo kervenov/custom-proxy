@@ -77,8 +77,7 @@ const APP_SETTINGS = {
        -set varyanti mevcut listeyi ONCE TEMIZLER, sonra yazar. Her abonelik
        guncellemesinde gonderildigi icin additive "exclude-routes" kullanilsa
        liste birikirdi; -set deterministik kalir. */
-    "exclude-routes": TM_CIDRS.join(","),      // Excluded routes: TM IP blokları
-    "exclude-routes-set": TM_CIDRS.join(","),
+    "exclude-routes-set": TM_CIDRS.join(","),  // Excluded routes: TM IP blokları
 };
 
 /* UA blacklist + BLOCK_RESPONSE REMOVED — moved into the Marzban
@@ -386,7 +385,7 @@ app.get("/sub/:data", async (req, res) => {
             "#announce: base64:8J+UhCDQn9C+0LTQv9C40YHQutCwINC+0LHQvdC+0LLQu9GP0LXRgtGB0Y8g0LrQsNC20LTRi9C5INGH0LDRgSEg8J+UhArimqDvuI8g0J/RgNC4INC/0YDQvtCx0LvQtdC80LDRhSDQv9C10YDQtdC30LDQs9GA0YPQt9C40YLQtSDRg9GB0YLRgNC+0LnRgdGC0LLQviDQuCDQtNC+0LHQsNCy0YzRgtC1INGB0YHRi9C70LrRgyDQt9Cw0L3QvtCy0L4uIOKaoO+4jw==",
             `#subscription-userinfo: upload=${upload}; download=${download}; total=${total}; expire=${expire}`,
             `#new-url: ${BACKUP_DOMAIN}${userToken}`,
-            `#providerid: ${PROVIDER_ID}`,
+            `#providerid ${PROVIDER_ID}`,
             `#new-domain: ${proxyHost}`,
             `#fallback-url: ${fallbackUrl}`,
             "#hide-settings: 1",
