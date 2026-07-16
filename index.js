@@ -24,6 +24,60 @@ const STATIC_CONFIGS_PATH = process.env.STATIC_CONFIGS_PATH || CFG.static_config
 const DOMAIN_CONFIG = CFG.domains || {};
 const DEFAULT_CONFIG = CFG.default || { providerId: "", backup: "" };
 
+/* ================================
+   1a) Türkmenistan IPv4 CIDR blokları (split tunneling)
+   Bu ağlara giden trafik tünelden GEÇMEZ — yerel TM trafiği doğrudan gider.
+   Kaynak: RIR delegation verisi (ipverse/rir-ip ve ipdeny.com — iki kaynak da
+   Temmuz 2026'da aynı 11 bloğu veriyor). Tahsisler değişebilir; periyodik
+   güncellemek gerekir.
+=================================== */
+const TM_CIDRS = [
+    "77.83.59.0/24",
+    "95.85.96.0/19",
+    "103.220.0.0/22",
+    "119.235.112.0/20",
+    "177.93.143.0/24",
+    "185.69.184.0/22",
+    "185.246.72.0/22",
+    "194.117.52.192/26",
+    "216.250.8.0/21",
+    "217.65.78.0/24",
+    "217.174.224.0/20",
+];
+
+/* ================================
+   1b) Happ app yönetim ayarları (ProviderID gerektirir)
+   Docs: https://www.happ.su/main/dev-docs/app-management
+   Her biri hem response header'ı hem "#key: value" body satırı olarak
+   gönderilir (asağıdaki tek objeden üretilir, sapma olmaz).
+=================================== */
+const APP_SETTINGS = {
+    /* --- Abonelik ayarları --- */
+    "subscription-auto-update-open-enable": "1",   // Update on open: On
+    "subscription-ping-onopen-enabled":     "1",   // Ping on open: On
+    "subscription-autoconnect":             "0",   // Connect on open: Off
+    "subscription-autoconnect-type": "lastused",   // Connect to: Last used (lastused/lowestdelay/random)
+    "subscriptions-collapse":               "0",   // Collapse subscriptions: Off (0 = hep açık)
+    "dont-use-filter":                      "0",   // Don't use filter: Off
+    "subscription-request-timeout":         "8",   // Subscription request timeout: 8 sn (5-15)
+    "subscriptions-sort-type":        "without",   // Server List: Unsorted (without/ping/alphabet)
+
+    /* --- Gelişmiş ayarlar --- */
+    "sniffing-enable":                      "1",   // Enable sniffing: On
+    "dns-from-json-enable":                 "0",   // Use DNS from JSON: Off
+    "server-address-resolve-enable":        "0",   // Enable Resolve Server: Off
+    "app-auto-start":                       "0",   // Autostart: Off
+    "tun-enable":                           "1",   // TUN: On (Desktop)
+    "tun-type":                       "singbox",   // TUN provider: sing-box (singbox/tun2proxy/default)
+    "tun-mode":                        "gvisor",   // TUN mode: gVisor (system/gvisor)
+
+    /* --- Excluded routes ---
+       -set varyanti mevcut listeyi ONCE TEMIZLER, sonra yazar. Her abonelik
+       guncellemesinde gonderildigi icin additive "exclude-routes" kullanilsa
+       liste birikirdi; -set deterministik kalir. */
+    "exclude-routes-set": TM_CIDRS.join(","),      // Excluded routes: TM IP blokları
+};
+
 /* UA blacklist + BLOCK_RESPONSE REMOVED — moved into the Marzban
    panel so the gatekeeping happens in ONE place. The panel's
    subscription router now 403s the same set of clients (browsers,
@@ -317,6 +371,9 @@ app.get("/sub/:data", async (req, res) => {
         res.set("notification-subs-expire", "1");
         res.set("check-url-via-proxy", "https://cp.cloudflare.com/generate_204");
         res.set("ping-result", "time");
+        res.set("proxy-ping-mode", "keepalive");
+        res.set("ping-type", "proxy");
+        for (const [k, v] of Object.entries(APP_SETTINGS)) res.set(k, v);
 
         const output = [
             "#profile-title: base64:4pqc77iPIEjhtIDhtJjhtJggU+G0m+G0j8qA4bSHIOKanO+4jw==",
@@ -336,6 +393,9 @@ app.get("/sub/:data", async (req, res) => {
             "#notification-subs-expire: 1",
             "#check-url-via-proxy: https://cp.cloudflare.com/generate_204",
             "#ping-result: time",
+            "#proxy-ping-mode: keepalive",
+            "#ping-type: proxy",
+            ...Object.entries(APP_SETTINGS).map(([k, v]) => `#${k}: ${v}`),
             ...configs,
             ...staticConfigs,
         ].join("\n");
