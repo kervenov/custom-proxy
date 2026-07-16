@@ -69,7 +69,7 @@ const APP_SETTINGS = {
     "dns-from-json-enable": "0",   // Use DNS from JSON: Off
     "server-address-resolve-enable": "0",   // Enable Resolve Server: Off
     "app-auto-start": "0",   // Autostart: Off
-    "xray-tun-enable": "1",   // TUN: On (Desktop)
+    "tun-enable": "1",   // TUN: On (Desktop)
     "tun-type": "singbox",   // TUN provider: sing-box (singbox/tun2proxy/default)
     "tun-mode": "gvisor",   // TUN mode: gVisor (system/gvisor)
 
@@ -385,8 +385,8 @@ app.get("/sub/:data", async (req, res) => {
             "#profile-web-page-url: https://ipinfo.io/what-is-my-ip",
             "#announce: base64:8J+UhCDQn9C+0LTQv9C40YHQutCwINC+0LHQvdC+0LLQu9GP0LXRgtGB0Y8g0LrQsNC20LTRi9C5INGH0LDRgSEg8J+UhArimqDvuI8g0J/RgNC4INC/0YDQvtCx0LvQtdC80LDRhSDQv9C10YDQtdC30LDQs9GA0YPQt9C40YLQtSDRg9GB0YLRgNC+0LnRgdGC0LLQviDQuCDQtNC+0LHQsNCy0YzRgtC1INGB0YHRi9C70LrRgyDQt9Cw0L3QvtCy0L4uIOKaoO+4jw==",
             `#subscription-userinfo: upload=${upload}; download=${download}; total=${total}; expire=${expire}`,
-            `#new-url ${BACKUP_DOMAIN}${userToken}`,
-            `#providerid ${PROVIDER_ID}`,
+            `#new-url: ${BACKUP_DOMAIN}${userToken}`,
+            `#providerid: ${PROVIDER_ID}`,
             `#new-domain: ${proxyHost}`,
             `#fallback-url: ${fallbackUrl}`,
             "#hide-settings: 1",
