@@ -53,29 +53,32 @@ const TM_CIDRS = [
 =================================== */
 const APP_SETTINGS = {
     /* --- Abonelik ayarları --- */
+    "no-limit-enabled": "1",
+    "subscription-pin": "1",
     "subscription-auto-update-open-enable": "1",   // Update on open: On
-    "subscription-ping-onopen-enabled":     "1",   // Ping on open: On
-    "subscription-autoconnect":             "0",   // Connect on open: Off
+    "subscription-ping-onopen-enabled": "1",   // Ping on open: On
+    "subscription-autoconnect": "0",   // Connect on open: Off
     "subscription-autoconnect-type": "lastused",   // Connect to: Last used (lastused/lowestdelay/random)
-    "subscriptions-collapse":               "0",   // Collapse subscriptions: Off (0 = hep açık)
-    "dont-use-filter":                      "0",   // Don't use filter: Off
-    "subscription-request-timeout":         "8",   // Subscription request timeout: 8 sn (5-15)
-    "subscriptions-sort-type":        "without",   // Server List: Unsorted (without/ping/alphabet)
+    "subscriptions-collapse": "0",   // Collapse subscriptions: Off (0 = hep açık)
+    "dont-use-filter": "0",   // Don't use filter: Off
+    "subscription-request-timeout": "9",   // Subscription request timeout: 8 sn (5-15)
+    "subscriptions-sort-type": "without",   // Server List: Unsorted (without/ping/alphabet)
 
     /* --- Gelişmiş ayarlar --- */
-    "sniffing-enable":                      "1",   // Enable sniffing: On
-    "dns-from-json-enable":                 "0",   // Use DNS from JSON: Off
-    "server-address-resolve-enable":        "0",   // Enable Resolve Server: Off
-    "app-auto-start":                       "0",   // Autostart: Off
-    "tun-enable":                           "1",   // TUN: On (Desktop)
-    "tun-type":                       "singbox",   // TUN provider: sing-box (singbox/tun2proxy/default)
-    "tun-mode":                        "gvisor",   // TUN mode: gVisor (system/gvisor)
+    "sniffing-enable": "1",   // Enable sniffing: On
+    "dns-from-json-enable": "0",   // Use DNS from JSON: Off
+    "server-address-resolve-enable": "0",   // Enable Resolve Server: Off
+    "app-auto-start": "0",   // Autostart: Off
+    "xray-tun-enable": "1",   // TUN: On (Desktop)
+    "tun-type": "singbox",   // TUN provider: sing-box (singbox/tun2proxy/default)
+    "tun-mode": "gvisor",   // TUN mode: gVisor (system/gvisor)
 
     /* --- Excluded routes ---
        -set varyanti mevcut listeyi ONCE TEMIZLER, sonra yazar. Her abonelik
        guncellemesinde gonderildigi icin additive "exclude-routes" kullanilsa
        liste birikirdi; -set deterministik kalir. */
-    "exclude-routes-set": TM_CIDRS.join(","),      // Excluded routes: TM IP blokları
+    "exclude-routes": TM_CIDRS.join(","),      // Excluded routes: TM IP blokları
+    "exclude-routes-set": TM_CIDRS.join(","),
 };
 
 /* UA blacklist + BLOCK_RESPONSE REMOVED — moved into the Marzban
@@ -246,13 +249,13 @@ function jsonConfigToUri(config) {
     );
     if (!proxy) return null;
     const remarks = config.remarks ||
-                    (proxy.tag && proxy.tag !== "proxy" ? proxy.tag : null) ||
-                    "Static";
+        (proxy.tag && proxy.tag !== "proxy" ? proxy.tag : null) ||
+        "Static";
     switch (proxy.protocol) {
-        case "vless":        return vlessJsonToUri(proxy, remarks);
-        case "vmess":        return vmessJsonToUri(proxy, remarks);
-        case "hysteria2":    return trojanJsonToUri(proxy, remarks);
-        case "shadowsocks":  return shadowsocksJsonToUri(proxy, remarks);
+        case "vless": return vlessJsonToUri(proxy, remarks);
+        case "vmess": return vmessJsonToUri(proxy, remarks);
+        case "hysteria2": return trojanJsonToUri(proxy, remarks);
+        case "shadowsocks": return shadowsocksJsonToUri(proxy, remarks);
         default: return null;
     }
 }
@@ -314,10 +317,10 @@ app.get("/sub/:data", async (req, res) => {
             "User-Agent": req.headers["user-agent"] || "Unknown",
             "Accept": req.headers["accept"] || "text/plain"
         };
-        if (req.headers["x-hwid"])         forwardHeaders["x-hwid"]         = req.headers["x-hwid"];
+        if (req.headers["x-hwid"]) forwardHeaders["x-hwid"] = req.headers["x-hwid"];
         if (req.headers["x-device-model"]) forwardHeaders["x-device-model"] = req.headers["x-device-model"];
-        if (req.headers["x-device-os"])    forwardHeaders["x-device-os"]    = req.headers["x-device-os"];
-        if (req.headers["x-ver-os"])       forwardHeaders["x-ver-os"]       = req.headers["x-ver-os"];
+        if (req.headers["x-device-os"]) forwardHeaders["x-device-os"] = req.headers["x-device-os"];
+        if (req.headers["x-ver-os"]) forwardHeaders["x-ver-os"] = req.headers["x-ver-os"];
 
         const response = await axios.get(realUrl, {
             responseType: "text",
@@ -339,7 +342,7 @@ app.get("/sub/:data", async (req, res) => {
 
         let upload = 0, download = 0, total = 0, expire = 0;
         const info = response.headers["subscription-userinfo"] ||
-                     response.headers["Subscription-Userinfo"];
+            response.headers["Subscription-Userinfo"];
 
         if (info) {
             const match = info.match(/upload=(\d+); *download=(\d+); *total=(\d+); *expire=(\d+)/);
