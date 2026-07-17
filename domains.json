@@ -1,18 +1,18 @@
 {
   "port": 8080,
-  "email": "ze.ares77@gmail.com",
+  "provider_id": "HnBuVTvc",
+  "backup_domain": "https://www.cyber-x.fun/sub/",
   "upstream_url": "https://ze.cyber-x.online:10086/sub/",
-  "static_configs_path": "/root/vpn-config.json",
-  "default": { "providerId": "amfF4cIN", "backup": "https://www.cyber-x.fun/sub/" },
-  "domains": {
-    "www.cyber-x.fun":      { "providerId": "amfF4cIN", "backup": "https://www.cyber-x.fun/sub/" },
-    "www.xonefun.store":    { "providerId": "lVYtV0Hd", "backup": "https://www.xonefun.store/sub/" },
-    "script.creedxt.store": { "providerId": "fhF0oyp2", "backup": "https://script.creedxt.store/sub/" },
-    "www.4121-cfd.online":  { "providerId": "KqcR7cOw", "backup": "https://www.4121-cfd.online/sub/" },
-    "run.ovhteam.ru":       { "providerId": "fDFtb8yU", "backup": "https://run.ovhteam.ru/sub/" },
-    "create.appleacdn.ru":  { "providerId": "6qYU4Lys", "backup": "https://create.appleacdn.ru/sub/" },
-    "www.applecdn.info":    { "providerId": "QuU4yFim", "backup": "https://www.applecdn.info/sub/" },
-    "store.cyber-x.press":  { "providerId": "JHF3SGTN", "backup": "https://store.cyber-x.press/sub/" },
-    "www.cyber-x.press":    { "providerId": "C67pAKQM", "backup": "https://www.cyber-x.press/sub/" }
-  }
+  "email": "ze.ares77@gmail.com",
+  "domains": [
+    "www.cyber-x.fun",
+    "www.xonefun.store",
+    "script.creedxt.store",
+    "www.4121-cfd.online",
+    "run.ovhteam.ru",
+    "create.appleacdn.ru",
+    "www.applecdn.info",
+    "store.cyber-x.press",
+    "www.cyber-x.press"
+  ]
 }
