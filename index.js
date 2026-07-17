@@ -317,6 +317,9 @@ app.get("/sub/:data", async (req, res) => {
         res.set("notification-subs-expire", "1");
         res.set("check-url-via-proxy", "https://cp.cloudflare.com/generate_204");
         res.set("ping-result", "time");
+        res.set("subscription-auto-update-open-enable", "1");
+        res.set("subscription-ping-onopen-enabled", "1");
+        res.set("proxy-ping-mode", "keepalive");
 
         const output = [
             "#profile-title: base64:4pqc77iPIEjhtIDhtJjhtJggU+G0m+G0j8qA4bSHIOKanO+4jw==",
@@ -336,6 +339,9 @@ app.get("/sub/:data", async (req, res) => {
             "#notification-subs-expire: 1",
             "#check-url-via-proxy: https://cp.cloudflare.com/generate_204",
             "#ping-result: time",
+            "#proxy-ping-mode: keepalive",
+            "#subscription-ping-onopen-enabled: 1",
+            "#subscription-auto-update-open-enable: 1",
             ...configs,
             ...staticConfigs,
         ].join("\n");
