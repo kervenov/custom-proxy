@@ -5,14 +5,17 @@
   "static_configs_path": "/root/vpn-config.json",
   "default": { "providerId": "amfF4cIN", "backup": "https://www.cyber-x.fun/sub/" },
   "domains": {
-    "www.scandinao.online":  { "providerId": "amfF4cIN", "backup": "https://www.scandinao.online/sub/" },
-    "www.cxartel.space":     { "providerId": "lVYtV0Hd", "backup": "https://www.cxartel.space/sub/" },
-    "www.chalibver.site":    { "providerId": "fhF0oyp2", "backup": "https://www.chalibver.site/sub/" },
-    "www.vavillion.store":   { "providerId": "KqcR7cOw", "backup": "https://www.vavillion.store/sub/" },
-    "www.persianao.tech":    { "providerId": "fDFtb8yU", "backup": "https://www.persianao.tech/sub/" },
-    "www.ibn-altair.online": { "providerId": "6qYU4Lys", "backup": "https://www.ibn-altair.online/sub/" },
-    "www.syndicade.shop":    { "providerId": "QuU4yFim", "backup": "https://www.syndicade.shop/sub/" },
-    "www.scandinao.ru":      { "providerId": "JHF3SGTN", "backup": "https://www.scandinao.ru/sub/" },
-    "www.ibn-altair.ru":     { "providerId": "C67pAKQM", "backup": "https://www.ibn-altair.ru/sub/" }
+    "run.ovhteam.ru":        { "providerId": "aF7kP2mQ", "backup": "https://run.ovhteam.ru/sub/" },
+"create.appleacdn.ru":   { "providerId": "xK9vR4nB", "backup": "https://create.appleacdn.ru/sub/" },
+"www.applecdn.info":     { "providerId": "mT6qW8cD", "backup": "https://www.applecdn.info/sub/" },
+"store.cyber-x.press":   { "providerId": "pL3yH7sE", "backup": "https://store.cyber-x.press/sub/" },
+"www.cyber-x.press":     { "providerId": "bN5zJ2uF", "backup": "https://www.cyber-x.press/sub/" },
+"www.tradizella.ru":     { "providerId": "rC8wM4gK", "backup": "https://www.tradizella.ru/sub/" },
+"www.aulashop.press":    { "providerId": "vD2fQ9xA", "backup": "https://www.aulashop.press/sub/" },
+"www.tradizella.online": { "providerId": "hY6nP3tL", "backup": "https://www.tradizella.online/sub/" },
+"www.marketapple.press": { "providerId": "qE4jS7bW", "backup": "https://www.marketapple.press/sub/" },
+"www.applemarket.space": { "providerId": "zG9mK5cR", "backup": "https://www.applemarket.space/sub/" },
+"www.googleplace.fun":   { "providerId": "uB3xN8dF", "backup": "https://www.googleplace.fun/sub/" },
+"www.googleapis.website":{ "providerId": "wJ7pL2vC", "backup": "https://www.googleapis.website/sub/" }
   }
 }
