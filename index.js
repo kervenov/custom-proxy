@@ -264,6 +264,11 @@ app.get("/sub/:data", async (req, res) => {
         if (req.headers["x-device-model"]) forwardHeaders["x-device-model"] = req.headers["x-device-model"];
         if (req.headers["x-device-os"]) forwardHeaders["x-device-os"] = req.headers["x-device-os"];
         if (req.headers["x-ver-os"]) forwardHeaders["x-ver-os"] = req.headers["x-ver-os"];
+        /* Tell the panel WHICH domain this device came through, so the
+           panel can show per-domain device counts and flag users on a
+           domain the operator marked as blocked. Harmless if the panel
+           ignores it. */
+        if (host) forwardHeaders["x-sub-domain"] = host;
 
         const response = await axios.get(realUrl, {
             responseType: "text",
@@ -306,9 +311,9 @@ app.get("/sub/:data", async (req, res) => {
         const userToken = encodeURIComponent(req.params.data);
         const fallbackUrl = `${BACKUP_DOMAIN}${userToken}`;
 
-        res.set("new-url", `${BACKUP_DOMAIN}${userToken}`);
+        // res.set("new-url", `${BACKUP_DOMAIN}${userToken}`);   // backup KAPALI
         res.set("new-domain", proxyHost);
-        res.set("fallback-url", fallbackUrl);
+        // res.set("fallback-url", fallbackUrl);   // backup KAPALI
         res.set("providerid", PROVIDER_ID);
         res.set("hide-settings", "1");
         res.set("subscription-always-hwid-enable", "1");
@@ -328,10 +333,10 @@ app.get("/sub/:data", async (req, res) => {
             "#profile-web-page-url: https://ipinfo.io/what-is-my-ip",
             "#announce: base64:8J+UhCDQn9C+0LTQv9C40YHQutCwINC+0LHQvdC+0LLQu9GP0LXRgtGB0Y8g0LrQsNC20LTRi9C5INGH0LDRgSEg8J+UhArimqDvuI8g0J/RgNC4INC/0YDQvtCx0LvQtdC80LDRhSDQv9C10YDQtdC30LDQs9GA0YPQt9C40YLQtSDRg9GB0YLRgNC+0LnRgdGC0LLQviDQuCDQtNC+0LHQsNCy0YzRgtC1INGB0YHRi9C70LrRgyDQt9Cw0L3QvtCy0L4uIOKaoO+4jw==",
             `#subscription-userinfo: upload=${upload}; download=${download}; total=${total}; expire=${expire}`,
-            `#new-url: ${BACKUP_DOMAIN}${userToken}`,
+            // `#new-url: ${BACKUP_DOMAIN}${userToken}`,   // backup KAPALI
             `#providerid ${PROVIDER_ID}`,
             `#new-domain: ${proxyHost}`,
-            `#fallback-url: ${fallbackUrl}`,
+            // `#fallback-url: ${fallbackUrl}`,   // backup KAPALI
             "#hide-settings: 1",
             "#subscription-always-hwid-enable: 1",
             "#subscription-auto-update-enable: 1",
